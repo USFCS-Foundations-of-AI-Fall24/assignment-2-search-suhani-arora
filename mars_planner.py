@@ -112,7 +112,7 @@ def drop_sample(state) :
 
 def charge(state) :
     r2 = deepcopy(state)
-    if state.sample_extracted and state.loc == "sample":
+    if state.sample_extracted and state.loc == "battery":
         r2.charged = True
     r2.prev = state
     return r2
@@ -132,18 +132,24 @@ def mission_complete(state) :
             state.holding_tool == False and
             state.holding_sample == False)
 
-
-if __name__=="__main__" :
+def main():
     s = RoverState()
-    result, states_generated = breadth_first_search(s, action_list, mission_complete)
-    print("\n** Results for Breadth First Search:\n", result, states_generated, "\n_______________________________________\n")
-    
-    result, states_generated = depth_first_search(s, action_list, mission_complete)
-    print("\n** Results for Depth First Search:\n", result, states_generated, "\n_______________________________________\n")
+    result_bfs, states_generated_bfs = breadth_first_search(s, action_list, mission_complete)
+    print(f"\n** Results for Breadth First Search: \n{result_bfs}\nTotal BFS States Generated: {states_generated_bfs}\n", "\n_______________________________________\n")
 
-    result, states_generated = depth_first_search(s, action_list, mission_complete, True, 7)
-    print("\n** Results for Depth Limited Search; Limit = 7:\n", result, states_generated, "\n_______________________________________\n")
-    
-    result, states_generated = subproblem_search(s, action_list)
-    print("\n** Results for Subproblem Search:\n", result, states_generated, "\n_______________________________________\n")
+    result_dfs, states_generated_dfs = depth_first_search(s, action_list, mission_complete)
+    print(f"\n** Results for Depth First Search: \n{result_dfs}\nTotal DFS States Generated: {states_generated_dfs}\n", "\n_______________________________________\n")
 
+    result_dls, states_generated_dls = depth_first_search(s, action_list, mission_complete, True,limit=7)
+    print(f"\n** Results for Depth Limited Search; Limit = 7\n{result_dls}\nTotal DLS States Generated: {states_generated_dls}\n", "\n_______________________________________\n")
+
+    result_subs, states_generated_subs = subproblem_search(s, action_list)
+    print(f"\n** Results for Subproblem Search:\n{result_subs}\nTotal Subproblem States Generated: {states_generated_subs}\n", "\n_______________________________________\n")
+    
+    print(f"\n** Q2 Summmary **\n\nBreadth First Search generated {states_generated_bfs} states.\n")
+    print(f"Depth First Search generated {states_generated_dfs} states.\n")
+    print(f"Depth Limited Search generated {states_generated_dls} states.\n")
+    print(f"Subproblem Search generated {states_generated_subs} states.\n")
+    
+if __name__=="__main__" :
+    main()
